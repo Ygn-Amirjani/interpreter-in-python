@@ -1,67 +1,83 @@
 class TypeToken:
 
-    ILLEGAL = "ILLEGAL" #signifiles a character we don't know about
-    EOF     = "EOF"     # End of file
+    ILLEGAL = 'ILLEGAL' #signifiles a character we don't know about
+    EOF     = 'EOF'     # End of file
 
 
     # Identifiers + literals
-    IDENT = "IDENT" # add, foobar, x, y, ...
-    INT   = "INT"   # 1343456
+    IDENT = 'IDENT' # add, foobar, x, y, ...
+    INT   = 'INT'   # 1343456
 
 
     # Operators
-    MULTIPLICATION = "*"
+    MULTIPLICATION = '*'
 
-    DIVISION = "/"
-    REMAININ = "%"
+    DIVISION = '/'
+    REMAININ = '%'
 
-    TOTAL       = "+"
-    SUBMISSION  = "-"
+    TOTAL       = '+'
+    SUBMISSION  = '-'
 
-    ASSIGN = "="
-    NOT    = "!"
+    ASSIGN = '='
+    NOT    = '!'
 
-    UNEQUAL = "!="
-    EQUAL   = "=="
+    UNEQUAL = '!='
+    EQUAL   = '=='
 
-    SMALLER = "<"
-    BIGGER  = ">"
+    SMALLER = '<'
+    BIGGER  = '>'
 
 
     # Delimiters
-    COMMA     = ","
-    SEMICOLON = ";"
+    COMMA     = ','
+    SEMICOLON = ';'
 
-    LPAREN = "("
-    RPAREN = ")"
-    LBRACE = "{"
-    RBRACE = "}"
+    LPAREN = '('
+    RPAREN = ')'
+    LBRACE = '{'
+    RBRACE = '}'
 
 
     # Keywords
-    INTEGER   = "INTEGER"
-    DOUBLE    = "DOUBLE"
-    FLOAT     = "FLOAT"
-    CHARACTER = "CHARACTER"
+    INTEGER   = 'INTEGER'
+    DOUBLE    = 'DOUBLE'
+    FLOAT     = 'FLOAT'
+    CHARACTER = 'CHARACTER'
 
-    TRUE  = "TRUE"
-    FALSE = "FALSE"
+    IF    = 'IF'
+    ELSE  = 'ELSE'
+    WHILE = 'WHILE'
+    FOR   = 'FOR'
 
-    IF    = "IF"
-    ELSE  = "ELSE"
-    WHILE = "WHILE"
-    FOR   = "FOR"
+    PRINT  = 'PRINT'
+    RETURN = 'RETURN'
+
+    TRUE  = 'TRUE'
+    FALSE = 'FALSE'
+
     
-    PRINT  = "PRINT"
-    RETURN = "RETURN"
-
 
 class NewToken :
 
     tokenType: TypeToken
     character: str
 
+    keywords = {
+        'int': TypeToken.INTEGER, 'double': TypeToken.DOUBLE, 'float': TypeToken.FLOAT, 'char': TypeToken.CHARACTER,
+        'if': TypeToken.IF, 'else': TypeToken.ELSE, 'while': TypeToken.WHILE, 'for': TypeToken.FOR,
+        'printf': TypeToken.PRINT, 'return':TypeToken.RETURN,
+        'true': TypeToken.TRUE, 'false': TypeToken.FALSE
+    }
+
     def __init__(self, tokenType: TypeToken, character: str) -> None:
         self.tokenType = tokenType
         self.character = character
+
+
+    """ checks the keywords table to see whether the given identifier is in fact a keyword ."""
+    def LookupIdent(self, Identification: str) -> TypeToken :
+        if Identification in self.keywords:
+            return self.keywords[Identification]
+        
+        return TypeToken.IDENT
     

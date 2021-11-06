@@ -1,3 +1,5 @@
+from _typeshed import Self
+from typing import NewType
 from Token import NewToken, TypeToken
 
 class Lexer :
@@ -9,6 +11,7 @@ class Lexer :
 
 
     def __init__(self, input: str) -> None:
+
         self.input = input
         self.current_position = 0 
         self.current_reading_position = 0
@@ -68,6 +71,26 @@ class Lexer :
             next = NewToken(TypeToken.LBRACE, self.current_char)
         elif self.current_char == '}' :
             next = NewToken(TypeToken.RBRACE, self.current_char)
-        
+        else :
+            if(self.isLetter(self.current_char)) :
+                Id = self.readIdentifier()  # we call readChar() repeatedly and advance our readPosition .
+                next = NewToken(NewToken.LookupIdent(Id), Id)
+                return next     # we don’t need the call to readChar() after the switch statement again.
+            else :
+                next = NewToken(TypeToken.ILLEGAL, self.current_char)
+
         self.read_char()
         return next
+
+
+    """ it reads in an identifier and advances our lexer’s positions until it encounters a non-letter-character."""
+    def readIdentifier(self) -> str :
+        current_position = self.current_position
+        while self.isLetter(self.current_char) :
+            self.read_char()
+
+        return self.input[current_position: self.current_position]
+
+    """ just checks whether the given argument is a letter."""
+    def isLetter(self, currentChar: str) -> bool :
+        return 'a' <= currentChar and currentChar <= 'z' or 'A' <= currentChar and currentChar <='Z' or currentChar == '_'

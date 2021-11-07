@@ -1,6 +1,4 @@
-from _typeshed import Self
-from typing import NewType
-from Token import NewToken, TypeToken
+from Token import TypeToken, NewToken 
 
 class Lexer :
 
@@ -37,6 +35,8 @@ class Lexer :
 
         next: NewToken
 
+        self.eatWhitespace()
+
         if self.current_char == '*' :
             next = NewToken(TypeToken.MULTIPLICATION, self.current_char)
         elif self.current_char == '/' :
@@ -72,15 +72,25 @@ class Lexer :
         elif self.current_char == '}' :
             next = NewToken(TypeToken.RBRACE, self.current_char)
         else :
-            if(self.isLetter(self.current_char)) :
+            if self.isLetter(self.current_char) :
                 Id = self.readIdentifier()  # we call readChar() repeatedly and advance our readPosition .
                 next = NewToken(NewToken.LookupIdent(Id), Id)
                 return next     # we don’t need the call to readChar() after the switch statement again.
+            elif self.isDigit(self.current_char) :
+                Id = self.readNumber()
+                next = NewToken(TypeToken.INT, self.readNumber())
+                return next 
             else :
                 next = NewToken(TypeToken.ILLEGAL, self.current_char)
 
+
         self.read_char()
         return next
+
+
+    def eatWhitespace(self) -> None :
+        while self.current_char == ' ' or self.current_char == '\t' or self.current_char == '\n' or self.current_char == '\r' :
+            self.read_char()
 
 
     """ it reads in an identifier and advances our lexer’s positions until it encounters a non-letter-character."""
@@ -91,6 +101,17 @@ class Lexer :
 
         return self.input[current_position: self.current_position]
 
+
+    def readNumber(self) -> str :
+        current_position = self.current_position
+        while self.isDigit(self.current_char) :
+            self.read_char()
+
+
     """ just checks whether the given argument is a letter."""
     def isLetter(self, currentChar: str) -> bool :
         return 'a' <= currentChar and currentChar <= 'z' or 'A' <= currentChar and currentChar <='Z' or currentChar == '_'
+
+
+    def isDigit(self, currentChar: str) -> bool :
+        return currentChar >= '0' and currentChar <= '9'

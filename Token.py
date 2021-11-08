@@ -1,4 +1,4 @@
-class TypeToken:
+class TokenType:
 
     ILLEGAL = 'ILLEGAL' #signifiles a character we don't know about
     EOF     = 'EOF'     # End of file
@@ -12,17 +12,28 @@ class TypeToken:
     # Operators
     MULTIPLICATION = '*'
 
+    MULTIPLICATION_ABBREVIATION = '*='
+
     DIVISION = '/'
     REMAININ = '%'
+
+    DIVISION_ABBREVIATION = '/='
+    REMAININ_ABBREVIATION = '%='
 
     TOTAL       = '+'
     SUBMISSION  = '-'
 
-    ASSIGN = '='
-    NOT    = '!'
+    ADDITIVE = '++'
+    DECREASE = '--'
 
-    UNEQUAL = '!='
+    PLURAL_ABBREVIATION      = '+='
+    SUBTRACTION_ABBREVIATION = '-='
+
+    ASSIGN = '='
+    NOT    = '!'    
+
     EQUAL   = '=='
+    UNEQUAL = '!='
 
     SMALLER = '<'
     BIGGER  = '>'
@@ -59,25 +70,27 @@ class TypeToken:
 
 class NewToken :
 
-    tokenType: TypeToken
+    tokenType: TokenType
     character: str
 
-    keywords = {
-        'int': TypeToken.INTEGER, 'double': TypeToken.DOUBLE, 'float': TypeToken.FLOAT, 'char': TypeToken.CHARACTER,
-        'if': TypeToken.IF, 'else': TypeToken.ELSE, 'while': TypeToken.WHILE, 'for': TypeToken.FOR,
-        'printf': TypeToken.PRINT, 'return':TypeToken.RETURN,
-        'true': TypeToken.TRUE, 'false': TypeToken.FALSE
-    }
-
-    def __init__(self, tokenType: TypeToken, character: str) -> None:
+    def __init__(self, tokenType: TokenType, character: str) -> None:
         self.tokenType = tokenType
         self.character = character
 
-
-    """ checks the keywords table to see whether the given identifier is in fact a keyword ."""
-    def LookupIdent(self, Identification: str) -> TypeToken :
-        if Identification in self.keywords:
-            return self.keywords[Identification]
-        
-        return TypeToken.IDENT
+    def __repr__(self) -> str :
+        return f'{self.character} -> {self.tokenType}'
     
+# is a dictionary for find token type :)
+keywords = {
+    'int': TokenType.INTEGER, 'double': TokenType.DOUBLE, 'float': TokenType.FLOAT, 'char': TokenType.CHARACTER,
+    'if': TokenType.IF, 'else': TokenType.ELSE, 'while': TokenType.WHILE, 'for': TokenType.FOR,
+    'printf': TokenType.PRINT, 'return':TokenType.RETURN,
+    'true': TokenType.TRUE, 'false': TokenType.FALSE
+}
+
+""" checks the keywords table to see whether the given identifier is in fact a keyword ."""
+def LookupIdent(Identification: str) -> str :
+    if Identification in keywords:
+        return keywords[Identification]
+        
+    return TokenType.IDENT

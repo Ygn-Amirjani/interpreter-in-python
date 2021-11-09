@@ -38,6 +38,9 @@ class TokenType:
     SMALLER = '<'
     BIGGER  = '>'
 
+    SMALLER_EQUALS = '<='
+    LARGER_EQUALS = '>='
+
 
     # Delimiters
     COMMA     = ','

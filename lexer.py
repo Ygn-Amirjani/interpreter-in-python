@@ -105,9 +105,21 @@ class Lexer :
             else :
                 next = NewToken(TokenType.NOT, self.current_char)
         elif self.current_char == '<' :
-            next = NewToken(TokenType.SMALLER, self.current_char)
+            if self.peekChar() == '=' :
+                current_char = self.current_char
+                self.read_char()
+                sum_string = str(current_char) + str(self.current_char)
+                next = NewToken(TokenType.SMALLER_EQUALS, sum_string)
+            else :
+                next = NewToken(TokenType.SMALLER, self.current_char)
         elif self.current_char == '>' :
-            next = NewToken(TokenType.BIGGER, self.current_char)
+            if self.peekChar() == '=' :
+                current_char = self.current_char
+                self.read_char()
+                sum_string = str(current_char) + str(self.current_char)
+                next = NewToken(TokenType.LARGER_EQUALS, sum_string)
+            else :            
+                next = NewToken(TokenType.BIGGER, self.current_char)
         elif self.current_char == ',' :
             next = NewToken(TokenType.COMMA, self.current_char)
         elif self.current_char == ';' :
@@ -151,8 +163,8 @@ class Lexer :
 
     """ just checks whether the given argument is a letter."""
     def isLetter(self, currentChar: str) -> bool :
-        # we accept 'YEGANE', 'amirjani', 'Yegane_Amirjani'
-        return 'a' <= currentChar and currentChar <= 'z' or 'A' <= currentChar and currentChar <='Z' or currentChar == '_'
+        # we accept 'YEGANE', 'amirjani'
+        return 'a' <= currentChar and currentChar <= 'z' or 'A' <= currentChar and currentChar <='Z'
 
 
     """ it reads in an identifier and advances our lexer’s positions until it encounters a non-letter-character."""

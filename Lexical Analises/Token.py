@@ -81,7 +81,7 @@ class NewToken :
         self.character = character
 
     def __repr__(self) -> str :
-        return f'{self.character} -> {self.tokenType}'
+        return f"( '{self.tokenType}' , '{self.character}' )"
     
 # is a dictionary for find token type :)
 keywords = {

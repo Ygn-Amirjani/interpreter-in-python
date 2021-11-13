@@ -1,192 +1,119 @@
-from Token import TokenType, NewToken, LookupIdent
+import ply.lex as lex
 
-class Lexer :
+Keywords = {
 
-    input: str  # Source Code
-    current_position: int   # current position in input (points to current char)
-    current_reading_position: int   # current reading position in input (after current char)
-    current_char: str   # current char under examination
+    'int'   : 'INTEGER' ,
+    'double': 'DOUBLE',
+    'float' : 'FLOAT',
+    'char'  : 'CHARACTER',
 
+    'if'    : 'IF',
+    'else'  : 'ELSE',
+    'while' : 'WHILE',
+    'for'   : 'FOR',
 
-    def __init__(self, input: str) -> None:
+    'print' : 'PRINT',
+    'return': 'RETURN',
 
-        self.input = input
-        self.current_position = 0 
-        self.current_reading_position = 0
-        self.current_char = ''
+    'True'  : 'TRUE',
+    'False' : 'FALSE',
 
-        self.read_char()
+}
 
+tokens = [
 
-    """ The purpose of readChar is to give us the next character and advance our position in the input string."""
-    def read_char(self) -> None :
-        # it does is to check whether we have reached the end of input
-        if self.current_reading_position >= len(self.input) :
-            self.current_char = ''  # we haven’t read anything yet
-        else :
-            self.current_char = self.input[self.current_reading_position]   # next char
+    'IDENT', 'INT',
+    'MULTIPLICATION_ABBREVIATION' , 'MULTIPLICATION',
+    'DIVISION_ABBREVIATION', 'DIVISION',
+    'REMAININ_ABBREVIATION', 'REMAININ',
+    'PLURAL_ABBREVIATION', 'ADDITIVE', 'TOTAL',
+    'DECREASE_ABBREVIATION','DECREASE', 'MINUS',
+    'EQUAL', 'ASSIGN', 
+    'UNEQUAL', 'NOT',
+    'SMALLER_EQUALS', 'SMALLER',
+    'LARGER_EQUALS', 'BIGGER',
+    'COMMA', 'SEMICOLON',
+    'LPAREN', 'RPAREN', 'LBRACE', 'RBRACE',
 
-        self.current_position = self.current_reading_position
-        self.current_reading_position += 1 
+] + list(Keywords.values())
 
+# Regular expression rules for Operators
+t_MULTIPLICATION_ABBREVIATION = r'\*='
+t_MULTIPLICATION = r'\*'
 
-    """ We look at the current character under examination  and return a token depending on which character it is."""
-    def NextToken(self) -> str :
+t_DIVISION_ABBREVIATION = r'/='
+t_DIVISION = r'/'
 
-        next: str
+t_REMAININ_ABBREVIATION = r'%='
+t_REMAININ = r'%'
 
-        self.eatWhitespace()
-        if self.current_char == '':
-            next = NewToken(TokenType.EOF, self.current_char)
-        elif self.current_char == '*' :
-            if self.peekChar() == '=' :
-                current_char = self.current_char
-                self.read_char()
-                sum_string = str(current_char) + str(self.current_char)
-                next = NewToken(TokenType.MULTIPLICATION_ABBREVIATION, sum_string) 
-            else :
-                next = NewToken(TokenType.MULTIPLICATION, self.current_char)
-        elif self.current_char == '/' :
-            if self.peekChar() == '=' :
-                current_char = self.current_char
-                self.read_char()
-                sum_string = str(current_char) + str(self.current_char)
-                next = NewToken(TokenType.DIVISION_ABBREVIATION, sum_string) 
-            else :
-                next = NewToken(TokenType.DIVISION, self.current_char)
-        elif self.current_char == '%' :
-            if self.peekChar() == '=' :
-                current_char = self.current_char
-                self.read_char()
-                sum_string = str(current_char) + str(self.current_char)
-                next = NewToken(TokenType.REMAININ_ABBREVIATION, sum_string) 
-            else :
-                next = NewToken(TokenType.REMAININ, self.current_char)
-        elif self.current_char == '+' :
-            if self.peekChar() == '+' :
-                current_char = self.current_char
-                self.read_char()
-                sum_string = str(current_char) + str(self.current_char)
-                next = NewToken(TokenType.ADDITIVE, sum_string)
-            elif self.peekChar() == '=' :
-                current_char = self.current_char
-                self.read_char()
-                sum_string = str(current_char) + str(self.current_char)
-                next = NewToken(TokenType.PLURAL_ABBREVIATION, sum_string) 
-            else :
-                next = NewToken(TokenType.TOTAL, self.current_char)
-        elif self.current_char == '-' :
-            if self.peekChar() == '-' :
-                current_char = self.current_char
-                self.read_char()
-                sum_string = str(current_char) + str(self.current_char)
-                next = NewToken(TokenType.DECREASE, sum_string) 
-            elif self.peekChar() == '=' :
-                current_char = self.current_char
-                self.read_char()
-                sum_string = str(current_char) + str(self.current_char)
-                next = NewToken(TokenType.SUBTRACTION_ABBREVIATION, sum_string) 
-            else :
-                next = NewToken(TokenType.SUBMISSION, self.current_char)
-        elif self.current_char == '=' :
-            if self.peekChar() == '=' :
-                current_char = self.current_char
-                self.read_char()
-                sum_string = str(current_char) + str(self.current_char)
-                next = NewToken(TokenType.EQUAL, sum_string)
-            else :
-                next = NewToken(TokenType.ASSIGN, self.current_char)
-        elif self.current_char == '!' :
-            if self.peekChar() == '=' :
-                current_char = self.current_char
-                self.read_char()
-                sum_string = str(current_char) + str(self.current_char)
-                next = NewToken(TokenType.UNEQUAL, sum_string)
-            else :
-                next = NewToken(TokenType.NOT, self.current_char)
-        elif self.current_char == '<' :
-            if self.peekChar() == '=' :
-                current_char = self.current_char
-                self.read_char()
-                sum_string = str(current_char) + str(self.current_char)
-                next = NewToken(TokenType.SMALLER_EQUALS, sum_string)
-            else :
-                next = NewToken(TokenType.SMALLER, self.current_char)
-        elif self.current_char == '>' :
-            if self.peekChar() == '=' :
-                current_char = self.current_char
-                self.read_char()
-                sum_string = str(current_char) + str(self.current_char)
-                next = NewToken(TokenType.LARGER_EQUALS, sum_string)
-            else :            
-                next = NewToken(TokenType.BIGGER, self.current_char)
-        elif self.current_char == ',' :
-            next = NewToken(TokenType.COMMA, self.current_char)
-        elif self.current_char == ';' :
-            next = NewToken(TokenType.SEMICOLON, self.current_char)
-        elif self.current_char == '(' :
-            next = NewToken(TokenType.LPAREN, self.current_char)
-        elif self.current_char == ')' :
-            next = NewToken(TokenType.RPAREN, self.current_char)
-        elif self.current_char == '{' :
-            next = NewToken(TokenType.LBRACE, self.current_char)
-        elif self.current_char == '}' :
-            next = NewToken(TokenType.RBRACE, self.current_char)
-        else :
-            if self.isLetter(self.current_char) :
-                Id = self.readIdentifier()  # we call readChar() repeatedly and advance our readPosition .
-                next = NewToken(LookupIdent(Id), Id)
-                return next     # we don’t need the call to readChar() after the switch statement again.
-            elif self.isDigit(self.current_char) :
-                next = NewToken(TokenType.INT, self.readNumber())
-                return next 
-            else :
-                next = NewToken(TokenType.ILLEGAL, self.current_char)
+t_PLURAL_ABBREVIATION = r'\+='
+t_ADDITIVE = r'\++'
+t_TOTAL    = r'\+'
 
+t_DECREASE_ABBREVIATION = r'-='
+t_DECREASE = r'--'
+t_MINUS    = r'-'
 
-        self.read_char()
-        return next
+t_EQUAL  = r'=='
+t_ASSIGN = r'='
 
+t_UNEQUAL = r'!='
+t_NOT     = r'!'
 
-    """ Go through empty spaces ."""
-    def eatWhitespace(self) -> None :
-        while self.current_char == ' ' or self.current_char == '\t' or self.current_char == '\n' or self.current_char == '\r' :
-            self.read_char()
+t_SMALLER_EQUALS = r'<='
+t_SMALLER        = r'<'
 
-    """ Read the next character. for -> (*= or ++ or == or != and ect)"""
-    def peekChar(self) -> str :
-        if self.current_reading_position >= len(self.input) :
-            return ''
-        else :
-            return self.input[self.current_reading_position]
+t_LARGER_EQUALS = r'>='
+t_BIGGER        = r'>'
 
+# Regular expression rules for Delimiters
+t_COMMA     = r','
+t_SEMICOLON = r';'
 
-    """ just checks whether the given argument is a letter."""
-    def isLetter(self, currentChar: str) -> bool :
-        # we accept 'YEGANE', 'amirjani'
-        return 'a' <= currentChar and currentChar <= 'z' or 'A' <= currentChar and currentChar <='Z'
+t_LPAREN = r'\('
+t_RPAREN = r'\)'
+t_LBRACE = r'\{'
+t_RBRACE = r'\}'
 
+""" Check if the strings read are in the keywords """
+def t_IDENT(t: tokens) -> str :
+    r'[a-zA-Z_][a-zA-Z_0-9]*' # zero char or more 
+    t.type = Keywords.get(t.value,'IDENT')    # Check for reserved words
+    return t
 
-    """ it reads in an identifier and advances our lexer’s positions until it encounters a non-letter-character."""
-    def readIdentifier(self) -> str :
-        current_position = self.current_position
-        
-        while self.isLetter(self.current_char) :
-            self.read_char()
+""" If the given string is a number, we cast it and return it """
+def t_INT(t: tokens) -> int :
+    r'\d+' # One Number or more 
+    t.value = int(t.value)
+    return t
 
-        return self.input[current_position: self.current_position]
+""" Cross the blank lines and note that you have to add to the number of lines """
+def t_newline(t: tokens) -> None :
+    r'\n+'  # One line or more
+    t.lexer.lineno += len(t.value)
 
-    """ just checks whether the given argument is a Digit """
-    def isDigit(self, currentChar: str) -> bool :
-        return currentChar >= '0' and currentChar <= '9'
+t_ignore  = ' \t' # Tabs
 
-    """ it reads in an identifier and advances our lexer’s positions until it encounters a non-Digit-character."""
-    def readNumber(self) -> str :
-        current_position = self.current_position
-        while self.isDigit(self.current_char) :
-            self.read_char()
+""" If the compiler does not recognize a token : """
+def t_error(t: tokens) -> None :
+    print('ILLEGAL %s' % t.value[0])
+    t.lexer.skip(1)
 
-        return self.input[current_position: self.current_position]
+lexer = lex.lex()
 
+def main() -> None :
+    data = '''
+        for(int i=0; i<=10 ; i+=1){
+            counter++;
+            if(counter == i)
+                i-- ;
+        }   
+    '''
+    lexer.input(data)   # Give the lexer some input
 
+    for tok in lexer :  # Tokenize
+        print(tok)
 
+if __name__ == '__main__' :
+    main()

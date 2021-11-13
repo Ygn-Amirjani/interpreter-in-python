@@ -1,9 +1,9 @@
 from Token import TokenType
-from lexer import Lexer
+from Lexing import Lexing
 
 def main() -> None :
-    sorce_code = 'int x = 5 + 7 ;'
-    go_to_lexer = Lexer(sorce_code)
+    sorce_code = 'int x = 3 + 42 * (s - t) ;'
+    go_to_lexer = Lexing(sorce_code)
     find_token = go_to_lexer.NextToken()
 
     while find_token.tokenType != TokenType.EOF :

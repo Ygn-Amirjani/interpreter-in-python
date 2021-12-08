@@ -1,5 +1,6 @@
 import ply.lex as lex
 
+# Keywords for create token
 Keywords = {
 
     'int'   : 'INTEGER' ,
@@ -20,6 +21,7 @@ Keywords = {
 
 }
 
+# Operators, Identifiers + literals, Delimiters for create token
 tokens = [
 
     'IDENT', 'INT',
@@ -35,7 +37,7 @@ tokens = [
     'COMMA', 'SEMICOLON',
     'LPAREN', 'RPAREN', 'LBRACE', 'RBRACE',
 
-] + list(Keywords.values())
+] + list(Keywords.values()) # Add the above with a list of dictionary values 
 
 # Regular expression rules for Operators
 t_MULTIPLICATION_ABBREVIATION = r'\*='

@@ -1,6 +1,6 @@
 class TokenType:
 
-    ILLEGAL = 'ILLEGAL' #signifiles a character we don't know about
+    ILLEGAL = 'ILLEGAL' # signifiles a character we don't know about
     EOF     = 'EOF'     # End of file
 
 

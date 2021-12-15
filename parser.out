@@ -1,0 +1,539 @@
+Created by PLY version 3.11 (http://www.dabeaz.com/ply)
+
+Unused terminals:
+
+    AND
+    ANDEQUAL
+    BIGGER
+    BREAK
+    CASE
+    CHARACTER
+    COLON
+    COMMA
+    CONDOP
+    CONST
+    CONTINUE
+    DECREASE_ABBREVIATION
+    DIVISION_ABBREVIATION
+    DO
+    DOUBLE
+    ELSE
+    EQUAL
+    FALSE
+    FLOAT
+    FOR
+    IDENT
+    IF
+    INTEGER
+    LAND
+    LARGER_EQUALS
+    LBRACKET
+    LNOT
+    LONG
+    LOR
+    LSHIFT
+    LSHIFTEQUAL
+    MINUSMINUS
+    MULTIPLICATION_ABBREVIATION
+    NOT
+    OR
+    OREQUAL
+    PLURAL_ABBREVIATION
+    PLUSPLUS
+    PRINT
+    RBRACKET
+    REMAININ
+    REMAININ_ABBREVIATION
+    RETURN
+    RSHIFT
+    RSHIFTEQUAL
+    SEMICOLON
+    SMALLER
+    SMALLER_EQUALS
+    SWITCH
+    TRUE
+    UNEQUAL
+    WHILE
+
+Grammar
+
+Rule 0     S' -> expression
+Rule 1     expression -> expression TOTAL expression
+Rule 2     expression -> expression MINUS expression
+Rule 3     expression -> expression MULTIPLICATION expression
+Rule 4     expression -> expression DIVISION expression
+Rule 5     expression -> expression ASSIGN expression
+Rule 6     expression -> term
+Rule 7     term -> factor
+Rule 8     factor -> INT
+Rule 9     factor -> LPAREN expression RPAREN
+
+Terminals, with rules where they appear
+
+AND                  : 
+ANDEQUAL             : 
+ASSIGN               : 5
+BIGGER               : 
+BREAK                : 
+CASE                 : 
+CHARACTER            : 
+COLON                : 
+COMMA                : 
+CONDOP               : 
+CONST                : 
+CONTINUE             : 
+DECREASE_ABBREVIATION : 
+DIVISION             : 4
+DIVISION_ABBREVIATION : 
+DO                   : 
+DOUBLE               : 
+ELSE                 : 
+EQUAL                : 
+FALSE                : 
+FLOAT                : 
+FOR                  : 
+IDENT                : 
+IF                   : 
+INT                  : 8
+INTEGER              : 
+LAND                 : 
+LARGER_EQUALS        : 
+LBRACKET             : 
+LNOT                 : 
+LONG                 : 
+LOR                  : 
+LPAREN               : 9
+LSHIFT               : 
+LSHIFTEQUAL          : 
+MINUS                : 2
+MINUSMINUS           : 
+MULTIPLICATION       : 3
+MULTIPLICATION_ABBREVIATION : 
+NOT                  : 
+OR                   : 
+OREQUAL              : 
+PLURAL_ABBREVIATION  : 
+PLUSPLUS             : 
+PRINT                : 
+RBRACKET             : 
+REMAININ             : 
+REMAININ_ABBREVIATION : 
+RETURN               : 
+RPAREN               : 9
+RSHIFT               : 
+RSHIFTEQUAL          : 
+SEMICOLON            : 
+SMALLER              : 
+SMALLER_EQUALS       : 
+SWITCH               : 
+TOTAL                : 1
+TRUE                 : 
+UNEQUAL              : 
+WHILE                : 
+error                : 
+
+Nonterminals, with rules where they appear
+
+expression           : 1 1 2 2 3 3 4 4 5 5 9 0
+factor               : 7
+term                 : 6
+
+Parsing method: LALR
+
+state 0
+
+    (0) S' -> . expression
+    (1) expression -> . expression TOTAL expression
+    (2) expression -> . expression MINUS expression
+    (3) expression -> . expression MULTIPLICATION expression
+    (4) expression -> . expression DIVISION expression
+    (5) expression -> . expression ASSIGN expression
+    (6) expression -> . term
+    (7) term -> . factor
+    (8) factor -> . INT
+    (9) factor -> . LPAREN expression RPAREN
+
+    INT             shift and go to state 4
+    LPAREN          shift and go to state 5
+
+    expression                     shift and go to state 1
+    term                           shift and go to state 2
+    factor                         shift and go to state 3
+
+state 1
+
+    (0) S' -> expression .
+    (1) expression -> expression . TOTAL expression
+    (2) expression -> expression . MINUS expression
+    (3) expression -> expression . MULTIPLICATION expression
+    (4) expression -> expression . DIVISION expression
+    (5) expression -> expression . ASSIGN expression
+
+    TOTAL           shift and go to state 6
+    MINUS           shift and go to state 7
+    MULTIPLICATION  shift and go to state 8
+    DIVISION        shift and go to state 9
+    ASSIGN          shift and go to state 10
+
+
+state 2
+
+    (6) expression -> term .
+
+    TOTAL           reduce using rule 6 (expression -> term .)
+    MINUS           reduce using rule 6 (expression -> term .)
+    MULTIPLICATION  reduce using rule 6 (expression -> term .)
+    DIVISION        reduce using rule 6 (expression -> term .)
+    ASSIGN          reduce using rule 6 (expression -> term .)
+    $end            reduce using rule 6 (expression -> term .)
+    RPAREN          reduce using rule 6 (expression -> term .)
+
+
+state 3
+
+    (7) term -> factor .
+
+    TOTAL           reduce using rule 7 (term -> factor .)
+    MINUS           reduce using rule 7 (term -> factor .)
+    MULTIPLICATION  reduce using rule 7 (term -> factor .)
+    DIVISION        reduce using rule 7 (term -> factor .)
+    ASSIGN          reduce using rule 7 (term -> factor .)
+    $end            reduce using rule 7 (term -> factor .)
+    RPAREN          reduce using rule 7 (term -> factor .)
+
+
+state 4
+
+    (8) factor -> INT .
+
+    TOTAL           reduce using rule 8 (factor -> INT .)
+    MINUS           reduce using rule 8 (factor -> INT .)
+    MULTIPLICATION  reduce using rule 8 (factor -> INT .)
+    DIVISION        reduce using rule 8 (factor -> INT .)
+    ASSIGN          reduce using rule 8 (factor -> INT .)
+    $end            reduce using rule 8 (factor -> INT .)
+    RPAREN          reduce using rule 8 (factor -> INT .)
+
+
+state 5
+
+    (9) factor -> LPAREN . expression RPAREN
+    (1) expression -> . expression TOTAL expression
+    (2) expression -> . expression MINUS expression
+    (3) expression -> . expression MULTIPLICATION expression
+    (4) expression -> . expression DIVISION expression
+    (5) expression -> . expression ASSIGN expression
+    (6) expression -> . term
+    (7) term -> . factor
+    (8) factor -> . INT
+    (9) factor -> . LPAREN expression RPAREN
+
+    INT             shift and go to state 4
+    LPAREN          shift and go to state 5
+
+    expression                     shift and go to state 11
+    term                           shift and go to state 2
+    factor                         shift and go to state 3
+
+state 6
+
+    (1) expression -> expression TOTAL . expression
+    (1) expression -> . expression TOTAL expression
+    (2) expression -> . expression MINUS expression
+    (3) expression -> . expression MULTIPLICATION expression
+    (4) expression -> . expression DIVISION expression
+    (5) expression -> . expression ASSIGN expression
+    (6) expression -> . term
+    (7) term -> . factor
+    (8) factor -> . INT
+    (9) factor -> . LPAREN expression RPAREN
+
+    INT             shift and go to state 4
+    LPAREN          shift and go to state 5
+
+    expression                     shift and go to state 12
+    term                           shift and go to state 2
+    factor                         shift and go to state 3
+
+state 7
+
+    (2) expression -> expression MINUS . expression
+    (1) expression -> . expression TOTAL expression
+    (2) expression -> . expression MINUS expression
+    (3) expression -> . expression MULTIPLICATION expression
+    (4) expression -> . expression DIVISION expression
+    (5) expression -> . expression ASSIGN expression
+    (6) expression -> . term
+    (7) term -> . factor
+    (8) factor -> . INT
+    (9) factor -> . LPAREN expression RPAREN
+
+    INT             shift and go to state 4
+    LPAREN          shift and go to state 5
+
+    expression                     shift and go to state 13
+    term                           shift and go to state 2
+    factor                         shift and go to state 3
+
+state 8
+
+    (3) expression -> expression MULTIPLICATION . expression
+    (1) expression -> . expression TOTAL expression
+    (2) expression -> . expression MINUS expression
+    (3) expression -> . expression MULTIPLICATION expression
+    (4) expression -> . expression DIVISION expression
+    (5) expression -> . expression ASSIGN expression
+    (6) expression -> . term
+    (7) term -> . factor
+    (8) factor -> . INT
+    (9) factor -> . LPAREN expression RPAREN
+
+    INT             shift and go to state 4
+    LPAREN          shift and go to state 5
+
+    expression                     shift and go to state 14
+    term                           shift and go to state 2
+    factor                         shift and go to state 3
+
+state 9
+
+    (4) expression -> expression DIVISION . expression
+    (1) expression -> . expression TOTAL expression
+    (2) expression -> . expression MINUS expression
+    (3) expression -> . expression MULTIPLICATION expression
+    (4) expression -> . expression DIVISION expression
+    (5) expression -> . expression ASSIGN expression
+    (6) expression -> . term
+    (7) term -> . factor
+    (8) factor -> . INT
+    (9) factor -> . LPAREN expression RPAREN
+
+    INT             shift and go to state 4
+    LPAREN          shift and go to state 5
+
+    expression                     shift and go to state 15
+    term                           shift and go to state 2
+    factor                         shift and go to state 3
+
+state 10
+
+    (5) expression -> expression ASSIGN . expression
+    (1) expression -> . expression TOTAL expression
+    (2) expression -> . expression MINUS expression
+    (3) expression -> . expression MULTIPLICATION expression
+    (4) expression -> . expression DIVISION expression
+    (5) expression -> . expression ASSIGN expression
+    (6) expression -> . term
+    (7) term -> . factor
+    (8) factor -> . INT
+    (9) factor -> . LPAREN expression RPAREN
+
+    INT             shift and go to state 4
+    LPAREN          shift and go to state 5
+
+    expression                     shift and go to state 16
+    term                           shift and go to state 2
+    factor                         shift and go to state 3
+
+state 11
+
+    (9) factor -> LPAREN expression . RPAREN
+    (1) expression -> expression . TOTAL expression
+    (2) expression -> expression . MINUS expression
+    (3) expression -> expression . MULTIPLICATION expression
+    (4) expression -> expression . DIVISION expression
+    (5) expression -> expression . ASSIGN expression
+
+    RPAREN          shift and go to state 17
+    TOTAL           shift and go to state 6
+    MINUS           shift and go to state 7
+    MULTIPLICATION  shift and go to state 8
+    DIVISION        shift and go to state 9
+    ASSIGN          shift and go to state 10
+
+
+state 12
+
+    (1) expression -> expression TOTAL expression .
+    (1) expression -> expression . TOTAL expression
+    (2) expression -> expression . MINUS expression
+    (3) expression -> expression . MULTIPLICATION expression
+    (4) expression -> expression . DIVISION expression
+    (5) expression -> expression . ASSIGN expression
+
+  ! shift/reduce conflict for TOTAL resolved as shift
+  ! shift/reduce conflict for MINUS resolved as shift
+  ! shift/reduce conflict for MULTIPLICATION resolved as shift
+  ! shift/reduce conflict for DIVISION resolved as shift
+  ! shift/reduce conflict for ASSIGN resolved as shift
+    $end            reduce using rule 1 (expression -> expression TOTAL expression .)
+    RPAREN          reduce using rule 1 (expression -> expression TOTAL expression .)
+    TOTAL           shift and go to state 6
+    MINUS           shift and go to state 7
+    MULTIPLICATION  shift and go to state 8
+    DIVISION        shift and go to state 9
+    ASSIGN          shift and go to state 10
+
+  ! TOTAL           [ reduce using rule 1 (expression -> expression TOTAL expression .) ]
+  ! MINUS           [ reduce using rule 1 (expression -> expression TOTAL expression .) ]
+  ! MULTIPLICATION  [ reduce using rule 1 (expression -> expression TOTAL expression .) ]
+  ! DIVISION        [ reduce using rule 1 (expression -> expression TOTAL expression .) ]
+  ! ASSIGN          [ reduce using rule 1 (expression -> expression TOTAL expression .) ]
+
+
+state 13
+
+    (2) expression -> expression MINUS expression .
+    (1) expression -> expression . TOTAL expression
+    (2) expression -> expression . MINUS expression
+    (3) expression -> expression . MULTIPLICATION expression
+    (4) expression -> expression . DIVISION expression
+    (5) expression -> expression . ASSIGN expression
+
+  ! shift/reduce conflict for TOTAL resolved as shift
+  ! shift/reduce conflict for MINUS resolved as shift
+  ! shift/reduce conflict for MULTIPLICATION resolved as shift
+  ! shift/reduce conflict for DIVISION resolved as shift
+  ! shift/reduce conflict for ASSIGN resolved as shift
+    $end            reduce using rule 2 (expression -> expression MINUS expression .)
+    RPAREN          reduce using rule 2 (expression -> expression MINUS expression .)
+    TOTAL           shift and go to state 6
+    MINUS           shift and go to state 7
+    MULTIPLICATION  shift and go to state 8
+    DIVISION        shift and go to state 9
+    ASSIGN          shift and go to state 10
+
+  ! TOTAL           [ reduce using rule 2 (expression -> expression MINUS expression .) ]
+  ! MINUS           [ reduce using rule 2 (expression -> expression MINUS expression .) ]
+  ! MULTIPLICATION  [ reduce using rule 2 (expression -> expression MINUS expression .) ]
+  ! DIVISION        [ reduce using rule 2 (expression -> expression MINUS expression .) ]
+  ! ASSIGN          [ reduce using rule 2 (expression -> expression MINUS expression .) ]
+
+
+state 14
+
+    (3) expression -> expression MULTIPLICATION expression .
+    (1) expression -> expression . TOTAL expression
+    (2) expression -> expression . MINUS expression
+    (3) expression -> expression . MULTIPLICATION expression
+    (4) expression -> expression . DIVISION expression
+    (5) expression -> expression . ASSIGN expression
+
+  ! shift/reduce conflict for TOTAL resolved as shift
+  ! shift/reduce conflict for MINUS resolved as shift
+  ! shift/reduce conflict for MULTIPLICATION resolved as shift
+  ! shift/reduce conflict for DIVISION resolved as shift
+  ! shift/reduce conflict for ASSIGN resolved as shift
+    $end            reduce using rule 3 (expression -> expression MULTIPLICATION expression .)
+    RPAREN          reduce using rule 3 (expression -> expression MULTIPLICATION expression .)
+    TOTAL           shift and go to state 6
+    MINUS           shift and go to state 7
+    MULTIPLICATION  shift and go to state 8
+    DIVISION        shift and go to state 9
+    ASSIGN          shift and go to state 10
+
+  ! TOTAL           [ reduce using rule 3 (expression -> expression MULTIPLICATION expression .) ]
+  ! MINUS           [ reduce using rule 3 (expression -> expression MULTIPLICATION expression .) ]
+  ! MULTIPLICATION  [ reduce using rule 3 (expression -> expression MULTIPLICATION expression .) ]
+  ! DIVISION        [ reduce using rule 3 (expression -> expression MULTIPLICATION expression .) ]
+  ! ASSIGN          [ reduce using rule 3 (expression -> expression MULTIPLICATION expression .) ]
+
+
+state 15
+
+    (4) expression -> expression DIVISION expression .
+    (1) expression -> expression . TOTAL expression
+    (2) expression -> expression . MINUS expression
+    (3) expression -> expression . MULTIPLICATION expression
+    (4) expression -> expression . DIVISION expression
+    (5) expression -> expression . ASSIGN expression
+
+  ! shift/reduce conflict for TOTAL resolved as shift
+  ! shift/reduce conflict for MINUS resolved as shift
+  ! shift/reduce conflict for MULTIPLICATION resolved as shift
+  ! shift/reduce conflict for DIVISION resolved as shift
+  ! shift/reduce conflict for ASSIGN resolved as shift
+    $end            reduce using rule 4 (expression -> expression DIVISION expression .)
+    RPAREN          reduce using rule 4 (expression -> expression DIVISION expression .)
+    TOTAL           shift and go to state 6
+    MINUS           shift and go to state 7
+    MULTIPLICATION  shift and go to state 8
+    DIVISION        shift and go to state 9
+    ASSIGN          shift and go to state 10
+
+  ! TOTAL           [ reduce using rule 4 (expression -> expression DIVISION expression .) ]
+  ! MINUS           [ reduce using rule 4 (expression -> expression DIVISION expression .) ]
+  ! MULTIPLICATION  [ reduce using rule 4 (expression -> expression DIVISION expression .) ]
+  ! DIVISION        [ reduce using rule 4 (expression -> expression DIVISION expression .) ]
+  ! ASSIGN          [ reduce using rule 4 (expression -> expression DIVISION expression .) ]
+
+
+state 16
+
+    (5) expression -> expression ASSIGN expression .
+    (1) expression -> expression . TOTAL expression
+    (2) expression -> expression . MINUS expression
+    (3) expression -> expression . MULTIPLICATION expression
+    (4) expression -> expression . DIVISION expression
+    (5) expression -> expression . ASSIGN expression
+
+  ! shift/reduce conflict for TOTAL resolved as shift
+  ! shift/reduce conflict for MINUS resolved as shift
+  ! shift/reduce conflict for MULTIPLICATION resolved as shift
+  ! shift/reduce conflict for DIVISION resolved as shift
+  ! shift/reduce conflict for ASSIGN resolved as shift
+    $end            reduce using rule 5 (expression -> expression ASSIGN expression .)
+    RPAREN          reduce using rule 5 (expression -> expression ASSIGN expression .)
+    TOTAL           shift and go to state 6
+    MINUS           shift and go to state 7
+    MULTIPLICATION  shift and go to state 8
+    DIVISION        shift and go to state 9
+    ASSIGN          shift and go to state 10
+
+  ! TOTAL           [ reduce using rule 5 (expression -> expression ASSIGN expression .) ]
+  ! MINUS           [ reduce using rule 5 (expression -> expression ASSIGN expression .) ]
+  ! MULTIPLICATION  [ reduce using rule 5 (expression -> expression ASSIGN expression .) ]
+  ! DIVISION        [ reduce using rule 5 (expression -> expression ASSIGN expression .) ]
+  ! ASSIGN          [ reduce using rule 5 (expression -> expression ASSIGN expression .) ]
+
+
+state 17
+
+    (9) factor -> LPAREN expression RPAREN .
+
+    TOTAL           reduce using rule 9 (factor -> LPAREN expression RPAREN .)
+    MINUS           reduce using rule 9 (factor -> LPAREN expression RPAREN .)
+    MULTIPLICATION  reduce using rule 9 (factor -> LPAREN expression RPAREN .)
+    DIVISION        reduce using rule 9 (factor -> LPAREN expression RPAREN .)
+    ASSIGN          reduce using rule 9 (factor -> LPAREN expression RPAREN .)
+    $end            reduce using rule 9 (factor -> LPAREN expression RPAREN .)
+    RPAREN          reduce using rule 9 (factor -> LPAREN expression RPAREN .)
+
+WARNING: 
+WARNING: Conflicts:
+WARNING: 
+WARNING: shift/reduce conflict for TOTAL in state 12 resolved as shift
+WARNING: shift/reduce conflict for MINUS in state 12 resolved as shift
+WARNING: shift/reduce conflict for MULTIPLICATION in state 12 resolved as shift
+WARNING: shift/reduce conflict for DIVISION in state 12 resolved as shift
+WARNING: shift/reduce conflict for ASSIGN in state 12 resolved as shift
+WARNING: shift/reduce conflict for TOTAL in state 13 resolved as shift
+WARNING: shift/reduce conflict for MINUS in state 13 resolved as shift
+WARNING: shift/reduce conflict for MULTIPLICATION in state 13 resolved as shift
+WARNING: shift/reduce conflict for DIVISION in state 13 resolved as shift
+WARNING: shift/reduce conflict for ASSIGN in state 13 resolved as shift
+WARNING: shift/reduce conflict for TOTAL in state 14 resolved as shift
+WARNING: shift/reduce conflict for MINUS in state 14 resolved as shift
+WARNING: shift/reduce conflict for MULTIPLICATION in state 14 resolved as shift
+WARNING: shift/reduce conflict for DIVISION in state 14 resolved as shift
+WARNING: shift/reduce conflict for ASSIGN in state 14 resolved as shift
+WARNING: shift/reduce conflict for TOTAL in state 15 resolved as shift
+WARNING: shift/reduce conflict for MINUS in state 15 resolved as shift
+WARNING: shift/reduce conflict for MULTIPLICATION in state 15 resolved as shift
+WARNING: shift/reduce conflict for DIVISION in state 15 resolved as shift
+WARNING: shift/reduce conflict for ASSIGN in state 15 resolved as shift
+WARNING: shift/reduce conflict for TOTAL in state 16 resolved as shift
+WARNING: shift/reduce conflict for MINUS in state 16 resolved as shift
+WARNING: shift/reduce conflict for MULTIPLICATION in state 16 resolved as shift
+WARNING: shift/reduce conflict for DIVISION in state 16 resolved as shift
+WARNING: shift/reduce conflict for ASSIGN in state 16 resolved as shift

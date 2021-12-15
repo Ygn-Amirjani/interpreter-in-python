@@ -1,121 +1,174 @@
 import ply.lex as lex
 
-# Keywords for create token
-Keywords = {
+class TokenRules(object) :
 
-    'int'   : 'INTEGER' ,
-    'double': 'DOUBLE',
-    'float' : 'FLOAT',
-    'char'  : 'CHARACTER',
+    # Keywords for create token
+    Keywords = {
 
-    'if'    : 'IF',
-    'else'  : 'ELSE',
-    'while' : 'WHILE',
-    'for'   : 'FOR',
+        'long'  : 'LONG',
+        'int'   : 'INTEGER' ,
+        'double': 'DOUBLE',
+        'float' : 'FLOAT',
+        'char'  : 'CHARACTER',
+        'CONST' : 'CONST',
 
-    'print' : 'PRINT',
-    'return': 'RETURN',
+        'if'    : 'IF',
+        'switch': 'SWITCH',
+        'case'  : 'CASE',
+        'else'  : 'ELSE',
+        'while' : 'WHILE',
+        'do'    : 'DO',
+        'for'   : 'FOR',
 
-    'True'  : 'TRUE',
-    'False' : 'FALSE',
+        'print' : 'PRINT',
+        'return': 'RETURN',
 
-}
+        'True'  : 'TRUE',
+        'False' : 'FALSE',
 
-# Operators, Identifiers + literals, Delimiters for create token
-tokens = [
+        'break'    : 'BREAK',
+        'continue' : 'CONTINUE',
 
-    'IDENT', 'INT',
-    'MULTIPLICATION_ABBREVIATION' , 'MULTIPLICATION',
-    'DIVISION_ABBREVIATION', 'DIVISION',
-    'REMAININ_ABBREVIATION', 'REMAININ',
-    'PLURAL_ABBREVIATION', 'ADDITIVE', 'TOTAL',
-    'DECREASE_ABBREVIATION','DECREASE', 'MINUS',
-    'EQUAL', 'ASSIGN', 
-    'UNEQUAL', 'NOT',
-    'SMALLER_EQUALS', 'SMALLER',
-    'LARGER_EQUALS', 'BIGGER',
-    'COMMA', 'SEMICOLON',
-    'LPAREN', 'RPAREN', 'LBRACE', 'RBRACE',
+    }
 
-] + list(Keywords.values()) # Add the above with a list of dictionary values 
+    # Operators, Identifiers + literals, Delimiters for create token
+    tokens = [
+        # Literals(identifier , integer)
+        'IDENT', 'INT',
 
-# Regular expression rules for Operators
-t_MULTIPLICATION_ABBREVIATION = r'\*='
-t_MULTIPLICATION = r'\*'
+        # Operators (+,-,*,/,%,|,&,~,<<,>>, ||, &&, !, <, <=, >, >=, ==, !=)
+        'MULTIPLICATION', 'DIVISION', 'REMAININ', 'TOTAL', 'MINUS', 'EQUAL', 'UNEQUAL', 'LNOT', 'NOT',
+        'LOR', 'OR', 'LAND', 'AND', 'LSHIFT', 'RSHIFT', 'SMALLER_EQUALS', 'SMALLER',
+        'LARGER_EQUALS', 'BIGGER', 
 
-t_DIVISION_ABBREVIATION = r'/='
-t_DIVISION = r'/'
 
-t_REMAININ_ABBREVIATION = r'%='
-t_REMAININ = r'%'
+        # Assignment (=, *=, /=, %=, +=, -=, <<=, >>=, &=, |=)
+        'MULTIPLICATION_ABBREVIATION', 'DIVISION_ABBREVIATION', 'REMAININ_ABBREVIATION', 'PLURAL_ABBREVIATION',
+        'DECREASE_ABBREVIATION', 'ASSIGN', 'OREQUAL', 'ANDEQUAL', 'LSHIFTEQUAL', 'RSHIFTEQUAL', 
 
-t_PLURAL_ABBREVIATION = r'\+='
-t_ADDITIVE = r'\++'
-t_TOTAL    = r'\+'
+        # Increment/decrement (++,--)
+        'PLUSPLUS', 'MINUSMINUS' ,
 
-t_DECREASE_ABBREVIATION = r'-='
-t_DECREASE = r'--'
-t_MINUS    = r'-'
+        # Delimeters ( ) [ ] , ; :
+        'COMMA', 'SEMICOLON', 'COLON',
+        'LPAREN', 'RPAREN', 'LBRACKET', 'RBRACKET',
 
-t_EQUAL  = r'=='
-t_ASSIGN = r'='
+        # Conditional operator (?)
+        'CONDOP',
 
-t_UNEQUAL = r'!='
-t_NOT     = r'!'
+    ] + list(Keywords.values())
 
-t_SMALLER_EQUALS = r'<='
-t_SMALLER        = r'<'
+    literals = [ '{', '}' ]
 
-t_LARGER_EQUALS = r'>='
-t_BIGGER        = r'>'
+    # Regular expression rules for Operators
+    t_MULTIPLICATION_ABBREVIATION = r'\*='
+    t_MULTIPLICATION = r'\*'
 
-# Regular expression rules for Delimiters
-t_COMMA     = r','
-t_SEMICOLON = r';'
+    t_DIVISION_ABBREVIATION = r'/='
+    t_DIVISION = r'/'
 
-t_LPAREN = r'\('
-t_RPAREN = r'\)'
-t_LBRACE = r'\{'
-t_RBRACE = r'\}'
+    t_REMAININ_ABBREVIATION = r'%='
+    t_REMAININ = r'%'
 
-""" Check if the strings read are in the keywords """
-def t_IDENT(t: tokens) -> str :
-    r'[a-zA-Z_][a-zA-Z_0-9]*' # zero char or more 
-    t.type = Keywords.get(t.value,'IDENT')    # Check for reserved words
-    return t
+    t_PLURAL_ABBREVIATION = r'\+='
+    t_PLUSPLUS = r'\+\+'
+    t_TOTAL    = r'\+'
 
-""" If the given string is a number, we cast it and return it """
-def t_INT(t: tokens) -> int :
-    r'\d+' # One Number or more 
-    t.value = int(t.value)
-    return t
+    t_DECREASE_ABBREVIATION = r'-='
+    t_MINUSMINUS = r'--'
+    t_MINUS    = r'-'
 
-""" Cross the blank lines and note that you have to add to the number of lines """
-def t_newline(t: tokens) -> None :
-    r'\n+'  # One line or more
-    t.lexer.lineno += len(t.value)
+    t_EQUAL  = r'=='
+    t_ASSIGN = r'='
 
-t_ignore  = ' \t' # Tabs
+    t_UNEQUAL = r'!='
+    t_LNOT    = r'!'
+    t_NOT     = r'~'
 
-""" If the compiler does not recognize a token : """
-def t_error(t: tokens) -> None :
-    print('ILLEGAL %s' % t.value[0])
-    t.lexer.skip(1)
+    t_OREQUAL = r'\|='
+    t_LOR     = r'\|\|'
+    t_OR      = r'\|'
 
-lexer = lex.lex()
+    t_ANDEQUAL = r'&='
+    t_LAND     = r'&&'
+    t_AND      = r'&'
 
-def main() -> None :
-    data = '''
-        for(int i=0; i<=10 ; i+=1){
-            counter++;
-            if(counter == i)
-                i-- ;
-        }   
-    '''
-    lexer.input(data)   # Give the lexer some input
+    t_LSHIFTEQUAL = r'<<='
+    t_LSHIFT      = r'<<'
 
-    for tok in lexer :  # Tokenize
-        print(tok)
+    t_SMALLER_EQUALS = r'<='
+    t_SMALLER        = r'<'
 
-if __name__ == '__main__' :
-    main()
+    t_RSHIFTEQUAL = r'>>='
+    t_RSHIFT      = r'>>'
+
+    t_LARGER_EQUALS = r'>='
+    t_BIGGER        = r'>'
+
+    # Regular expression rules for Delimiters
+    t_COMMA     = r','
+    t_SEMICOLON = r';'
+    t_COLON = r':'
+
+    t_LPAREN = r'\('
+    t_RPAREN = r'\)'
+
+    t_LBRACKET = r'\['
+    t_RBRACKET = r'\]'
+
+    t_CONDOP = r'\?'
+
+    t_ignore  = ' \t' # Tabs
+    
+    t_ignore_COMMENT1 = r'//.*'
+    t_ignore_COMMENT2 = r'/\*(.|\n)*?\*/'
+
+
+    """ Set token type to the expected literal """
+    def t_lbrace(self, t: tokens) -> tokens:
+        r'\{'
+        t.type = '{'   
+        return t
+
+    """ Set token type to the expected literal """
+    def t_rbrace(self, t: tokens) -> tokens:
+        r'\}'
+        t.type = '}'    
+        return t
+
+    """ Check if the strings read are in the keywords """
+    def t_IDENT(self, t: tokens) -> str :
+        r'[a-zA-Z_][a-zA-Z_0-9]*' # zero char or more 
+        t.type = self.Keywords.get(t.value,'IDENT')    # Check for reserved words
+        return t
+
+    """ If the given string is a number, we cast it and return it """
+    def t_INT(self, t: tokens) -> int:
+        r'\d+' # One Number or more 
+        t.value = int(t.value)
+        return t
+
+    """ Cross the blank lines and note that you have to add to the number of lines """
+    def t_newline(self, t: tokens) -> None:
+        r'\n+'
+        t.lexer.lineno += len(t.value)
+
+    """ input is the input text string and token is a token instance """
+    def find_column(self, input: str, token) -> int:
+        line_start = input.rfind('\n', 0, token.lexpos) + 1
+        return (token.lexpos - line_start)  + 1
+
+    """ If the compiler does not recognize a token : """
+    def t_error(self, t: tokens) -> None:
+        print('ILLEGAL %s' % t.value[0])
+        t.lexer.skip    (1)
+
+    """ Build the lexer """
+    def build(self, **kwargs):
+        self.lexer = lex.lex(module=self, **kwargs)
+
+    """ Give the lexer some input and Tokenize """
+    def main(self, data: str) -> None:
+        self.lexer.input(data)   
+        for tok in self.lexer :  
+            print(tok)

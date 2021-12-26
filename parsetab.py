@@ -6,9 +6,9 @@ _tabversion = '3.10'
 
 _lr_method = 'LALR'
 
-_lr_signature = 'AND ANDEQUAL ASSIGN BIGGER BREAK CASE CHARACTER COLON COMMA CONDOP CONST CONTINUE DECREASE_ABBREVIATION DIVISION DIVISION_ABBREVIATION DO DOUBLE ELSE EQUAL FALSE FLOAT FOR IDENT IF INT INTEGER LAND LARGER_EQUALS LBRACKET LNOT LONG LOR LPAREN LSHIFT LSHIFTEQUAL MINUS MINUSMINUS MULTIPLICATION MULTIPLICATION_ABBREVIATION NOT OR OREQUAL PLURAL_ABBREVIATION PLUSPLUS PRINT RBRACKET REMAININ REMAININ_ABBREVIATION RETURN RPAREN RSHIFT RSHIFTEQUAL SEMICOLON SMALLER SMALLER_EQUALS SWITCH TOTAL TRUE UNEQUAL WHILEexpression : expression TOTAL expression\n                  | expression MINUS expression\n                  | expression MULTIPLICATION expression\n                  | expression DIVISION expression\n                  | expression ASSIGN expression expression : termterm : factorfactor : INTfactor : LPAREN expression RPAREN'
+_lr_signature = 'AND ASSIGN BIGGER COLON COMMA DECREASE_ABBREVIATION DIVISION DIVISION_ABBREVIATION EQUAL IDENT INT LARGER_EQUALS LBRACKET LCURLYBRACKET LPAREN MINUS MINUSMINUS MULTIPLICATION MULTIPLICATION_ABBREVIATION NOT OR PLURAL_ABBREVIATION PLUSPLUS RBRACKET RCURLYBRACKET REMAININ REMAININ_ABBREVIATION RPAREN SEMICOLON SMALLER SMALLER_EQUALS TOTAL UNEQUALexpression : expression TOTAL termexpression : expression MINUS termexpression : termterm : term MULTIPLICATION factorterm : term DIVISION factorterm : factorfactor : INTfactor : LPAREN expression RPAREN'
     
-_lr_action_items = {'INT':([0,5,6,7,8,9,10,],[4,4,4,4,4,4,4,]),'LPAREN':([0,5,6,7,8,9,10,],[5,5,5,5,5,5,5,]),'$end':([1,2,3,4,12,13,14,15,16,17,],[0,-6,-7,-8,-1,-2,-3,-4,-5,-9,]),'TOTAL':([1,2,3,4,11,12,13,14,15,16,17,],[6,-6,-7,-8,6,6,6,6,6,6,-9,]),'MINUS':([1,2,3,4,11,12,13,14,15,16,17,],[7,-6,-7,-8,7,7,7,7,7,7,-9,]),'MULTIPLICATION':([1,2,3,4,11,12,13,14,15,16,17,],[8,-6,-7,-8,8,8,8,8,8,8,-9,]),'DIVISION':([1,2,3,4,11,12,13,14,15,16,17,],[9,-6,-7,-8,9,9,9,9,9,9,-9,]),'ASSIGN':([1,2,3,4,11,12,13,14,15,16,17,],[10,-6,-7,-8,10,10,10,10,10,10,-9,]),'RPAREN':([2,3,4,11,12,13,14,15,16,17,],[-6,-7,-8,17,-1,-2,-3,-4,-5,-9,]),}
+_lr_action_items = {'INT':([0,5,6,7,8,9,],[4,4,4,4,4,4,]),'LPAREN':([0,5,6,7,8,9,],[5,5,5,5,5,5,]),'$end':([1,2,3,4,11,12,13,14,15,],[0,-3,-6,-7,-1,-2,-4,-5,-8,]),'TOTAL':([1,2,3,4,10,11,12,13,14,15,],[6,-3,-6,-7,6,-1,-2,-4,-5,-8,]),'MINUS':([1,2,3,4,10,11,12,13,14,15,],[7,-3,-6,-7,7,-1,-2,-4,-5,-8,]),'RPAREN':([2,3,4,10,11,12,13,14,15,],[-3,-6,-7,15,-1,-2,-4,-5,-8,]),'MULTIPLICATION':([2,3,4,11,12,13,14,15,],[8,-6,-7,8,8,-4,-5,-8,]),'DIVISION':([2,3,4,11,12,13,14,15,],[9,-6,-7,9,9,-4,-5,-8,]),}
 
 _lr_action = {}
 for _k, _v in _lr_action_items.items():
@@ -17,7 +17,7 @@ for _k, _v in _lr_action_items.items():
       _lr_action[_x][_k] = _y
 del _lr_action_items
 
-_lr_goto_items = {'expression':([0,5,6,7,8,9,10,],[1,11,12,13,14,15,16,]),'term':([0,5,6,7,8,9,10,],[2,2,2,2,2,2,2,]),'factor':([0,5,6,7,8,9,10,],[3,3,3,3,3,3,3,]),}
+_lr_goto_items = {'expression':([0,5,],[1,10,]),'term':([0,5,6,7,],[2,2,11,12,]),'factor':([0,5,6,7,8,9,],[3,3,3,3,13,14,]),}
 
 _lr_goto = {}
 for _k, _v in _lr_goto_items.items():
@@ -27,13 +27,12 @@ for _k, _v in _lr_goto_items.items():
 del _lr_goto_items
 _lr_productions = [
   ("S' -> expression","S'",1,None,None,None),
-  ('expression -> expression TOTAL expression','expression',3,'p_binary_operators','Parsing.py',7),
-  ('expression -> expression MINUS expression','expression',3,'p_binary_operators','Parsing.py',8),
-  ('expression -> expression MULTIPLICATION expression','expression',3,'p_binary_operators','Parsing.py',9),
-  ('expression -> expression DIVISION expression','expression',3,'p_binary_operators','Parsing.py',10),
-  ('expression -> expression ASSIGN expression','expression',3,'p_binary_operators','Parsing.py',11),
-  ('expression -> term','expression',1,'p_expression_term','Parsing.py',24),
-  ('term -> factor','term',1,'p_term_factor','Parsing.py',28),
-  ('factor -> INT','factor',1,'p_factor_num','Parsing.py',32),
-  ('factor -> LPAREN expression RPAREN','factor',3,'p_factor_expr','Parsing.py',36),
+  ('expression -> expression TOTAL term','expression',3,'p_expression_Total','Parsing.py',7),
+  ('expression -> expression MINUS term','expression',3,'p_expression_minus','Parsing.py',11),
+  ('expression -> term','expression',1,'p_expression_term','Parsing.py',15),
+  ('term -> term MULTIPLICATION factor','term',3,'p_term_Multiplication','Parsing.py',19),
+  ('term -> term DIVISION factor','term',3,'p_term_Division','Parsing.py',23),
+  ('term -> factor','term',1,'p_term_factor','Parsing.py',27),
+  ('factor -> INT','factor',1,'p_factor_int','Parsing.py',31),
+  ('factor -> LPAREN expression RPAREN','factor',3,'p_factor_expr','Parsing.py',35),
 ]

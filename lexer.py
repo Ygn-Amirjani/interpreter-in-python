@@ -33,32 +33,27 @@ class TokenRules(object) :
 
     # Operators, Identifiers + literals, Delimiters for create token
     tokens = [
+
         # Literals(identifier , integer)
-        'IDENT', 'INT',
+        'IDENT', 'NUMBER',
 
         # Operators (+,-,*,/,%,|,&,~,<<,>>, ||, &&, !, <, <=, >, >=, ==, !=)
-        'MULTIPLICATION', 'DIVISION', 'REMAININ', 'TOTAL', 'MINUS', 'EQUAL', 'UNEQUAL', 'LNOT', 'NOT',
-        'LOR', 'OR', 'LAND', 'AND', 'LSHIFT', 'RSHIFT', 'SMALLER_EQUALS', 'SMALLER',
+        'MULTIPLICATION', 'DIVISION', 'REMAININ', 'PLUS', 'MINUS', 'EQUAL', 'UNEQUAL', 'NOT',
+        'OR', 'AND', 'SMALLER_EQUALS', 'SMALLER',
         'LARGER_EQUALS', 'BIGGER', 
-
 
         # Assignment (=, *=, /=, %=, +=, -=, <<=, >>=, &=, |=)
         'MULTIPLICATION_ABBREVIATION', 'DIVISION_ABBREVIATION', 'REMAININ_ABBREVIATION', 'PLURAL_ABBREVIATION',
-        'DECREASE_ABBREVIATION', 'ASSIGN', 'OREQUAL', 'ANDEQUAL', 'LSHIFTEQUAL', 'RSHIFTEQUAL', 
+        'DECREASE_ABBREVIATION', 'ASSIGN',
 
         # Increment/decrement (++,--)
         'PLUSPLUS', 'MINUSMINUS' ,
 
         # Delimeters ( ) [ ] , ; :
         'COMMA', 'SEMICOLON', 'COLON',
-        'LPAREN', 'RPAREN', 'LBRACKET', 'RBRACKET',
-
-        # Conditional operator (?)
-        'CONDOP',
+        'LPAREN', 'RPAREN', 'LBRACKET', 'RBRACKET','LCURLYBRACKET', 'RCURLYBRACKET'
 
     ] + list(Keywords.values())
-
-    literals = [ '{', '}' ]
 
     # Regular expression rules for Operators
     t_MULTIPLICATION_ABBREVIATION = r'\*='
@@ -72,7 +67,7 @@ class TokenRules(object) :
 
     t_PLURAL_ABBREVIATION = r'\+='
     t_PLUSPLUS = r'\+\+'
-    t_TOTAL    = r'\+'
+    t_PLUS    = r'\+'
 
     t_DECREASE_ABBREVIATION = r'-='
     t_MINUSMINUS = r'--'
@@ -82,25 +77,13 @@ class TokenRules(object) :
     t_ASSIGN = r'='
 
     t_UNEQUAL = r'!='
-    t_LNOT    = r'!'
-    t_NOT     = r'~'
+    t_NOT    = r'!'
 
-    t_OREQUAL = r'\|='
-    t_LOR     = r'\|\|'
-    t_OR      = r'\|'
-
-    t_ANDEQUAL = r'&='
-    t_LAND     = r'&&'
-    t_AND      = r'&'
-
-    t_LSHIFTEQUAL = r'<<='
-    t_LSHIFT      = r'<<'
+    t_OR  = r'\|\|'
+    t_AND = r'&&'
 
     t_SMALLER_EQUALS = r'<='
     t_SMALLER        = r'<'
-
-    t_RSHIFTEQUAL = r'>>='
-    t_RSHIFT      = r'>>'
 
     t_LARGER_EQUALS = r'>='
     t_BIGGER        = r'>'
@@ -116,34 +99,24 @@ class TokenRules(object) :
     t_LBRACKET = r'\['
     t_RBRACKET = r'\]'
 
-    t_CONDOP = r'\?'
+    t_LCURLYBRACKET = r'{'
+    t_RCURLYBRACKET = r'}'
 
-    t_ignore  = ' \t' # Tabs
+    # Tabs
+    t_ignore = ' \t' 
     
+    # comment
     t_ignore_COMMENT1 = r'//.*'
     t_ignore_COMMENT2 = r'/\*(.|\n)*?\*/'
-
-
-    """ Set token type to the expected literal """
-    def t_lbrace(self, t: tokens) -> tokens:
-        r'\{'
-        t.type = '{'   
-        return t
-
-    """ Set token type to the expected literal """
-    def t_rbrace(self, t: tokens) -> tokens:
-        r'\}'
-        t.type = '}'    
-        return t
 
     """ Check if the strings read are in the keywords """
     def t_IDENT(self, t: tokens) -> str :
         r'[a-zA-Z_][a-zA-Z_0-9]*' # zero char or more 
-        t.type = self.Keywords.get(t.value,'IDENT')    # Check for reserved words
+        t.type = self.Keywords.get(t.value, 'IDENT')    # Check for reserved words 
         return t
 
     """ If the given string is a number, we cast it and return it """
-    def t_INT(self, t: tokens) -> int:
+    def t_NUMBER(self, t: tokens) -> int:
         r'\d+' # One Number or more 
         t.value = int(t.value)
         return t

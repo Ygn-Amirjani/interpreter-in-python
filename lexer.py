@@ -2,32 +2,19 @@ import ply.lex as lex
 
 class TokenRules(object) :
 
+    input: str
+
     # Keywords for create token
     Keywords = {
 
-        'long'  : 'LONG',
-        'int'   : 'INTEGER' ,
-        'double': 'DOUBLE',
-        'float' : 'FLOAT',
-        'char'  : 'CHARACTER',
-        'CONST' : 'CONST',
+        'int'   : 'INT' ,
+        'char'  : 'CHAR',
 
         'if'    : 'IF',
-        'switch': 'SWITCH',
-        'case'  : 'CASE',
         'else'  : 'ELSE',
         'while' : 'WHILE',
         'do'    : 'DO',
         'for'   : 'FOR',
-
-        'print' : 'PRINT',
-        'return': 'RETURN',
-
-        'True'  : 'TRUE',
-        'False' : 'FALSE',
-
-        'break'    : 'BREAK',
-        'continue' : 'CONTINUE',
 
     }
 
@@ -35,72 +22,51 @@ class TokenRules(object) :
     tokens = [
 
         # Literals(identifier , integer)
-        'IDENT', 'NUMBER',
+        'IDENTIFIER', 'NUMBER',
 
         # Operators (+,-,*,/,%,|,&,~,<<,>>, ||, &&, !, <, <=, >, >=, ==, !=)
-        'MULTIPLICATION', 'DIVISION', 'REMAININ', 'PLUS', 'MINUS', 'EQUAL', 'UNEQUAL', 'NOT',
-        'OR', 'AND', 'SMALLER_EQUALS', 'SMALLER',
-        'LARGER_EQUALS', 'BIGGER', 
+        'TIMES', 'DIVIDE', 'PLUS', 'MINUS', 'EQ', 'NOT_EQ', 'LE', 'LT',
+        'GE', 'GT', 
 
         # Assignment (=, *=, /=, %=, +=, -=, <<=, >>=, &=, |=)
-        'MULTIPLICATION_ABBREVIATION', 'DIVISION_ABBREVIATION', 'REMAININ_ABBREVIATION', 'PLURAL_ABBREVIATION',
-        'DECREASE_ABBREVIATION', 'ASSIGN',
-
-        # Increment/decrement (++,--)
-        'PLUSPLUS', 'MINUSMINUS' ,
+        'PLUSASSIGN', 'ASSIGN',
 
         # Delimeters ( ) [ ] , ; :
-        'COMMA', 'SEMICOLON', 'COLON',
-        'LPAREN', 'RPAREN', 'LBRACKET', 'RBRACKET','LCURLYBRACKET', 'RCURLYBRACKET'
+        'COMMA', 'SEMICOLON',
+        'LPAREN', 'RPAREN', 'LBRACE', 'RBRACE',
 
     ] + list(Keywords.values())
 
     # Regular expression rules for Operators
-    t_MULTIPLICATION_ABBREVIATION = r'\*='
-    t_MULTIPLICATION = r'\*'
+    t_PLUSASSIGN = r'\+='
 
-    t_DIVISION_ABBREVIATION = r'/='
-    t_DIVISION = r'/'
+    t_TIMES  = r'\*'
 
-    t_REMAININ_ABBREVIATION = r'%='
-    t_REMAININ = r'%'
+    t_DIVIDE = r'/'
 
-    t_PLURAL_ABBREVIATION = r'\+='
-    t_PLUSPLUS = r'\+\+'
-    t_PLUS    = r'\+'
+    t_PLUS   = r'\+' 
 
-    t_DECREASE_ABBREVIATION = r'-='
-    t_MINUSMINUS = r'--'
-    t_MINUS    = r'-'
-
-    t_EQUAL  = r'=='
+    t_MINUS  = r'-'
+    
+    t_NOT_EQ = r'!='
+    t_EQ     = r'=='
     t_ASSIGN = r'='
 
-    t_UNEQUAL = r'!='
-    t_NOT    = r'!'
+    t_LE = r'<='
+    t_GE = r'>='
 
-    t_OR  = r'\|\|'
-    t_AND = r'&&'
-
-    t_SMALLER_EQUALS = r'<='
-    t_SMALLER        = r'<'
-
-    t_LARGER_EQUALS = r'>='
-    t_BIGGER        = r'>'
+    t_LT = r'<'
+    t_GT = r'>'
 
     # Regular expression rules for Delimiters
     t_COMMA     = r','
     t_SEMICOLON = r';'
-    t_COLON = r':'
 
     t_LPAREN = r'\('
     t_RPAREN = r'\)'
 
-    t_LBRACKET = r'\['
-    t_RBRACKET = r'\]'
-
-    t_LCURLYBRACKET = r'{'
-    t_RCURLYBRACKET = r'}'
+    t_LBRACE = r'{'
+    t_RBRACE = r'}'
 
     # Tabs
     t_ignore = ' \t' 
@@ -109,10 +75,15 @@ class TokenRules(object) :
     t_ignore_COMMENT1 = r'//.*'
     t_ignore_COMMENT2 = r'/\*(.|\n)*?\*/'
 
+    def __init__(self, input: str, **kwargs) -> None:
+        super().__init__()
+        self.lexer = lex.lex(module=self, **kwargs)
+        self.input = input     
+
     """ Check if the strings read are in the keywords """
-    def t_IDENT(self, t: tokens) -> str :
+    def t_IDENTIFIER(self, t: tokens) -> str :
         r'[a-zA-Z_][a-zA-Z_0-9]*' # zero char or more 
-        t.type = self.Keywords.get(t.value, 'IDENT')    # Check for reserved words 
+        t.type = self.Keywords.get(t.value, 'IDENTIFIER')    # Check for reserved words 
         return t
 
     """ If the given string is a number, we cast it and return it """
@@ -134,14 +105,10 @@ class TokenRules(object) :
     """ If the compiler does not recognize a token : """
     def t_error(self, t: tokens) -> None:
         print('ILLEGAL %s' % t.value[0])
-        t.lexer.skip    (1)
-
-    """ Build the lexer """
-    def build(self, **kwargs):
-        self.lexer = lex.lex(module=self, **kwargs)
+        t.lexer.skip(1)
 
     """ Give the lexer some input and Tokenize """
-    def main(self, data: str) -> None:
-        self.lexer.input(data)   
+    def print_token(self) -> None:
+        self.lexer.input(self.input)   
         for tok in self.lexer :  
             print(tok)

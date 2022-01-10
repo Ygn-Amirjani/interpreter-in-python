@@ -3,11 +3,9 @@ class TokenType:
     ILLEGAL = 'ILLEGAL' # signifiles a character we don't know about
     EOF     = 'EOF'     # End of file
 
-
     # Identifiers + literals
     IDENT = 'IDENT' # add, foobar, x, y, ...
     INT   = 'INT'   # 1343456
-
 
     # Operators
     MULTIPLICATION = '*'
@@ -41,7 +39,6 @@ class TokenType:
     SMALLER_EQUALS = '<='
     LARGER_EQUALS = '>='
 
-
     # Delimiters
     COMMA     = ','
     SEMICOLON = ';'
@@ -50,7 +47,6 @@ class TokenType:
     RPAREN = ')'
     LBRACE = '{'
     RBRACE = '}'
-
 
     # Keywords
     INTEGER   = 'INTEGER'
@@ -69,13 +65,13 @@ class TokenType:
     TRUE  = 'TRUE'
     FALSE = 'FALSE'
 
-    
 
 class NewToken :
 
     tokenType: TokenType
     character: str
 
+    """ Constructor ! """
     def __init__(self, tokenType: TokenType, character: str) -> None:
         self.tokenType = tokenType
         self.character = character

@@ -7,7 +7,7 @@ class Lexing :
     current_reading_position: int   # current reading position in input (after current char)
     current_char: str   # current char under examination
 
-
+    """ Constructor ! """
     def __init__(self, input: str) -> None:
 
         self.input = input
@@ -16,7 +16,6 @@ class Lexing :
         self.current_char = ''
 
         self.read_char()
-
 
     """ The purpose of readChar is to give us the next character and advance our position in the input string."""
     def read_char(self) -> None :
@@ -29,10 +28,8 @@ class Lexing :
         self.current_position = self.current_reading_position
         self.current_reading_position += 1 
 
-
     """ We look at the current character under examination  and return a token depending on which character it is."""
     def NextToken(self) -> str :
-
         next: str
 
         self.eatWhitespace()
@@ -147,7 +144,6 @@ class Lexing :
         self.read_char()
         return next
 
-
     """ Go through empty spaces ."""
     def eatWhitespace(self) -> None :
         while self.current_char == ' ' or self.current_char == '\t' or self.current_char == '\n' or self.current_char == '\r' :
@@ -160,14 +156,12 @@ class Lexing :
         else :
             return self.input[self.current_reading_position]
 
-
     """ just checks whether the given argument is a letter."""
     def isLetter(self, currentChar: str) -> bool :
         # we accept 'YEGANE', 'amirjani'
         return 'a' <= currentChar and currentChar <= 'z' or 'A' <= currentChar and currentChar <='Z'
 
-
-    """ it reads in an identifier and advances our lexer’s positions until it encounters a non-letter-character."""
+    """ it reads in an identifier and advances our lexer's positions until it encounters a non-letter-character."""
     def readIdentifier(self) -> str :
         current_position = self.current_position
         

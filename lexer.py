@@ -75,6 +75,7 @@ class TokenRules(object) :
     t_ignore_COMMENT1 = r'//.*'
     t_ignore_COMMENT2 = r'/\*(.|\n)*?\*/'
 
+    """ Constructor ! """
     def __init__(self, input: str, **kwargs) -> None:
         super().__init__()
         self.lexer = lex.lex(module=self, **kwargs)

@@ -1,275 +1,210 @@
 from ply.yacc import YaccProduction as YP
 from lexer import TokenRules
-import ply.yacc as yacc
+import ply.yacc
 
 tokens = TokenRules.tokens
 
 
-def p_start(t: YP):
-    """start : compound_statement
-             | declaration"""
+def p_start(token : YP):
+    """start : nested_stmnt
+             | variable_starter"""
     pass
 
 
-def p_statement_type(t: YP):
-    """statement_type : type_specifier statement_type
-                      | type_specifier"""
+def p_variable_detector(token : YP):
+    """variable_detector : CHAR variable_detector
+                         | INT variable_detector
+                         | CHAR
+                         | INT"""
     pass
 
 
-def p_type_specifier(t: YP):
-    """type_specifier : CHAR
-                      | INT"""
+def p_assign_detector(token : YP):
+    """assign_detector : identifier_punctuator
+                       | identifier_punctuator ASSIGN starting_brace"""
     pass
 
 
-def p_init_declarator_compound(t: YP):
-    """init_declarator_compound : init_declarator
-                                | init_declarator_compound COMMA init_declarator"""
+def p_variable_starter(token : YP):
+    """variable_starter : variable_detector assign_detector SEMICOLON
+                        | variable_detector assign_detector COMMA assign_detector SEMICOLON
+                        | variable_detector SEMICOLON"""
     pass
 
 
-def p_init_declarator(t: YP):
-    """init_declarator : simple_declarator
-                       | simple_declarator ASSIGN initializer"""
+def p_variable_starter_chains(token : YP):
+    """variable_starter_chains : variable_starter
+                               | variable_starter_chains variable_starter"""
     pass
 
 
-def p_multi_specifier(t: YP):
-    """multi_specifier : type_specifier multi_specifier
-                       | type_specifier"""
+def p_identifier_punctuator(token : YP):
+    """identifier_punctuator : IDENTIFIER
+                             | LPAREN identifier_punctuator RPAREN
+                             | identifier_punctuator LPAREN parameter_variable_starter RPAREN
+                             | identifier_punctuator LPAREN parameter_variable_starter COMMA parameter_variable_starter RPAREN
+                             | identifier_punctuator LPAREN IDENTIFIER RPAREN
+                             | identifier_punctuator LPAREN IDENTIFIER COMMA IDENTIFIER RPAREN"""
     pass
 
 
-def p_declaration(t: YP):
-    """declaration : statement_type init_declarator_compound SEMICOLON
-                   | statement_type SEMICOLON"""
+def p_parameter_variable_starter(token : YP):
+    """parameter_variable_starter : variable_detector identifier_punctuator
+                                  | variable_detector identifier_punctuator_2
+                                  | variable_detector empty"""
     pass
 
 
-def p_declaration_compound(t: YP):
-    """declaration_compound : declaration
-                            | declaration_compound declaration"""
+def p_starting_brace(token : YP):
+    """starting_brace : assigning
+                      | LBRACE starting_brace RBRACE
+                      | LBRACE starting_brace COMMA starting_brace RBRACE
+                      | LBRACE starting_brace COMMA RBRACE
+                      | LBRACE starting_brace COMMA starting_brace COMMA RBRACE"""
     pass
 
 
-def p_simple_declarator(t: YP):
-    """simple_declarator : IDENTIFIER
-                         | LPAREN simple_declarator RPAREN
-                         | simple_declarator LPAREN parameter_list RPAREN
-                         | simple_declarator LPAREN identifier_list RPAREN"""
+def p_variable_detector_2(token : YP):
+    """variable_detector_2 : variable_detector identifier_punctuator_2
+                           | variable_detector empty"""
     pass
 
 
-def p_parameter_list(t: YP):
-    """parameter_list : parameter_declaration
-                      | parameter_list COMMA parameter_declaration"""
+def p_identifier_punctuator_2(token : YP):
+    """identifier_punctuator_2 : LPAREN identifier_punctuator_2 RPAREN
+                               | identifier_punctuator_2 LPAREN parameter_variable_starter RPAREN
+                               | identifier_punctuator_2 LPAREN parameter_variable_starter COMMA parameter_variable_starter RPAREN
+                               | identifier_punctuator_2 LPAREN empty RPAREN
+                               | LPAREN parameter_variable_starter RPAREN
+                               | LPAREN parameter_variable_starter COMMA parameter_variable_starter RPAREN
+                               | LPAREN empty RPAREN"""
     pass
 
 
-def p_parameter_declaration(t: YP):
-    """parameter_declaration : statement_type simple_declarator
-                             | statement_type declarator_type"""
+def p_stmnt(token : YP):
+    '''stmnt :   expression_2 SEMICOLON
+             | nested_stmnt
+             | if
+             | loops'''
     pass
 
 
-def p_identifier_list(t: YP):
-    """identifier_list : IDENTIFIER
-                       | identifier_list COMMA IDENTIFIER"""
+def p_nested_stmnt(token : YP):
+    """nested_stmnt : LBRACE variable_starter_chains stmnt_chains RBRACE
+                    | LBRACE stmnt_chains RBRACE
+                    | LBRACE variable_starter_chains RBRACE
+                    | LBRACE RBRACE"""
     pass
 
 
-def p_initializer_1(t: YP):
-    """initializer : assignment_expression
-                   | LBRACE initializer_list RBRACE
-                   | LBRACE initializer_list COMMA RBRACE"""
+def p_stmnt_chains(token : YP):
+    """stmnt_chains : stmnt
+                    | stmnt_chains stmnt"""
     pass
 
 
-def p_initializer_list(t: YP):
-    """initializer_list : initializer
-                        | initializer_list COMMA initializer"""
+def p_if(token : YP):
+    """if : IF LPAREN expression RPAREN stmnt
+          | IF LPAREN expression RPAREN stmnt ELSE stmnt"""
     pass
 
 
-def p_type_name(t: YP):
-    """type_name : multi_specifier declarator_type"""
+def p_loops(token : YP):
+    """loops : WHILE LPAREN expression RPAREN stmnt
+             | FOR LPAREN expression_2 SEMICOLON expression_2 SEMICOLON expression_2 RPAREN stmnt
+             | DO stmnt WHILE LPAREN expression RPAREN SEMICOLON"""
     pass
 
 
-def p_declarator_type(t: YP):
-    """declarator_type : empty
-                       | direct_single_declarator"""
+def p_expression_2(token : YP):
+    """expression_2 : empty
+                    | expression"""
     pass
 
 
-def p_direct_single_declarator(t: YP):
-    """direct_single_declarator : LPAREN direct_single_declarator RPAREN
-                                | direct_single_declarator LPAREN parameter_type_list RPAREN
-                                | LPAREN parameter_type_list RPAREN"""
+def p_expression(token : YP):
+    """expression : assigning
+                  | expression COMMA assigning"""
     pass
 
 
-def p_statement(t: YP):
-    '''statement : expression_statement
-                 | compound_statement
-                 | if_statement
-                 | iteration_statement'''
+def p_assigning(token : YP):
+    """assigning : equal_unequal
+                 | single_operand ASSIGN assigning
+                 | single_operand PLUSASSIGN assigning"""
     pass
 
 
-def p_expression_statement(t: YP):
-    """expression_statement : expression_type SEMICOLON"""
+def p_equal_unequal(token : YP):
+    """equal_unequal : comparison
+                     | equal_unequal EQ comparison
+                     | equal_unequal NOT_EQ comparison"""
     pass
 
 
-def p_compound_statement(t: YP):
-    """compound_statement : LBRACE declaration_compound statement_list RBRACE
-                          | LBRACE statement_list RBRACE
-                          | LBRACE declaration_compound RBRACE
-                          | LBRACE RBRACE"""
+def p_comparison(token : YP):
+    """comparison : arithmetic_precedence
+                  | comparison LT arithmetic_precedence
+                  | comparison GT arithmetic_precedence
+                  | comparison LE arithmetic_precedence
+                  | comparison GE arithmetic_precedence"""
     pass
 
 
-def p_statement_list(t: YP):
-    """statement_list : statement
-                      | statement_list statement"""
+def p_multiply_division(token : YP):
+    """multiply_division : cast
+                         | multiply_division TIMES cast
+                         | multiply_division DIVIDE cast"""
     pass
 
 
-def p_parameter_type_list(t: YP):
-    """parameter_type_list : empty
-                           | parameter_list"""
+def p_cast(token : YP):
+    """cast : single_operand
+            | LPAREN variable_detector_2 RPAREN cast"""
     pass
 
 
-def p_if_statement(t: YP):
-    """if_statement : IF LPAREN expression RPAREN statement
-                    | IF LPAREN expression RPAREN statement ELSE statement"""
+def p_arithmetic_precedence(token : YP):
+    """arithmetic_precedence : multiply_division
+                             | arithmetic_precedence PLUS multiply_division
+                             | arithmetic_precedence MINUS multiply_division"""
     pass
 
 
-def p_iteration_statement(t: YP):
-    """iteration_statement : WHILE LPAREN expression RPAREN statement
-                           | FOR LPAREN expression_type SEMICOLON expression_type SEMICOLON expression_type RPAREN statement
-                           | DO statement WHILE LPAREN expression RPAREN SEMICOLON"""
+def p_single_operand(token : YP):
+    """single_operand : expression_combination
+                      | TIMES cast
+                      | PLUS cast
+                      | MINUS cast"""
     pass
 
 
-def p_expression_type(t: YP):
-    """expression_type : empty
-                       | expression"""
+def p_expression_combination(token : YP):
+    """expression_combination : IDENTIFIER
+                              | NUMBER
+                              | LPAREN expression RPAREN
+                              | expression_combination LPAREN assigning RPAREN
+                              | expression_combination LPAREN assigning COMMA assigning RPAREN
+                              | expression_combination LPAREN RPAREN"""
     pass
 
 
-def p_expression(t: YP):
-    """expression : assignment_expression
-                  | expression COMMA assignment_expression"""
-    pass
-
-
-def p_assignment_expression_1(t: YP):
-    """assignment_expression : equality_expression
-                             | unary_expression assignment_operator assignment_expression"""
-    pass
-
-
-def p_assignment_operator(t: YP):
-    """assignment_operator : ASSIGN
-                           | PLUSASSIGN"""
-    pass
-
-
-def p_equality_expression(t: YP):
-    """equality_expression : relational_expression
-                           | equality_expression EQ relational_expression
-                           | equality_expression NOT_EQ relational_expression"""
-    pass
-
-
-def p_relational_expression(t: YP):
-    """relational_expression : next_expression
-                             | relational_expression LT next_expression
-                             | relational_expression GT next_expression
-                             | relational_expression LE next_expression
-                             | relational_expression GE next_expression"""
-    pass
-
-
-def p_multiplicative_expression(t: YP):
-    """multiplicative_expression : cast_expression
-                                 | multiplicative_expression TIMES cast_expression
-                                 | multiplicative_expression DIVIDE cast_expression"""
-    pass
-
-
-def p_cast_expression(t: YP):
-    """cast_expression : unary_expression
-                       | LPAREN type_name RPAREN cast_expression"""
-    pass
-
-
-def p_next_expression(t: YP):
-    """next_expression : multiplicative_expression
-                       | next_expression PLUS multiplicative_expression
-                       | next_expression MINUS multiplicative_expression"""
-    pass
-
-def p_unary_expression(t: YP):
-    """unary_expression : higher_expression
-                        | unary_operator cast_expression"""
-    pass
-
-
-def p_unary_operator(t: YP):
-    """unary_operator : TIMES
-                      | PLUS
-                      | MINUS"""
-    pass
-
-
-def p_higher_expression(t: YP):
-    """higher_expression : primary_expression
-                         | higher_expression LPAREN argument_expression_list RPAREN
-                         | higher_expression LPAREN RPAREN"""
-    pass
-
-
-def p_primary_expression(t: YP):
-    """primary_expression :  IDENTIFIER
-                          |  constant
-                          |  LPAREN expression RPAREN"""
-    pass
-
-
-def p_argument_expression_list(t: YP):
-    """argument_expression_list :  assignment_expression
-                                |  argument_expression_list COMMA assignment_expression"""
-    pass
-
-
-def p_constant(t: YP):
-    """constant : NUMBER"""
-    pass
-
-
-def p_empty(t: YP):
+def p_empty(token : YP):
     """empty : """
     pass
 
 
-parser = yacc.yacc()
-
 data = '''
 {
-    int temp = 0;
+    int i;
 
-    while(tmp > 10)
-    {
-        temp = temp + 1;
-    }
+    for (i=0;i<10;i=i+1)
+        i=i+1;
 }
 '''
+
+
+parser = ply.yacc.yacc()
 lexer = TokenRules(data)
 result = parser.parse(data)
 
